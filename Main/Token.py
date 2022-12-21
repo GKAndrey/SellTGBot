@@ -1,6 +1,6 @@
 import json
 
-token = ""
+token = "5950507768:AAG5OWXQtfIV2vVyskqOj0QBzIXS4zfEgeg"
 
 with open("Admins.json", "r") as read_file:
     admin_list = json.load(read_file)
