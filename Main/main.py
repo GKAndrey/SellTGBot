@@ -27,3 +27,15 @@ class User():
             json.dump(list_p, write_file, indent = 4)
 
 bot = telebot.TeleBot(token = Token.token) #Токен скрыт для сохранения в гитхаб.
+
+@bot.message_handler(commands=["start"]) #Основная панель юзера, где прописываются все взаимодействия.
+def start(message):
+    pass
+
+@bot.message_handler(commands=["admin"]) #Панель админов с добавлениями, удалениями или изменениями продуктов.
+def admins(message):
+    pass
+
+@bot.message_handler(commands=["question"]) #Вопросы к администрации бота, с повода ошибок, багов, вопросов и тд.
+def question(message):
+    pass
