@@ -34,7 +34,8 @@ def start(message):
 
 @bot.message_handler(commands=["admin"]) #Панель админов с добавлениями, удалениями или изменениями продуктов.
 def admins(message):
-    pass
+    if message.user_id in Token.admin_list:
+        pass
 
 @bot.message_handler(commands=["question"]) #Вопросы к администрации бота, с повода ошибок, багов, вопросов и тд.
 def question(message):
