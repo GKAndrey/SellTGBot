@@ -12,6 +12,12 @@ der_prod_js = os.listdir(path_Prod)
 
 
 
+try:
+    with open("questionlist.json", "r") as read_file:
+        question_list = json.load(read_file)
+except:
+    question_list = []
+
 with open("Admins.json", "r") as read_file:
     admin_list = json.load(read_file)
 
@@ -37,19 +43,18 @@ def adm_mns(ID):
         with open("Admins.json", "w") as write_file:
             json.dump(admin_list, write_file,sort_keys=False,indent=4,ensure_ascii=False,)
     except:
-        print("ERROR. NOT FOUND ID.")
+        pass
 
 def up_list_prod():
     global product_list
     product_list = []
     for i in der_prod_js:
-        with open(f"{path_Prod}\{i}", "r", encoding='utf-8') as read_file:
+        with open(f"{path_Prod}\{i}", "r") as read_file:
             prod_inf_list = json.load(read_file)
         product_list.append(Product(prod_inf_list[0]))
         product_list[-1].add_photo(prod_inf_list[1])
         product_list[-1].add_opis(prod_inf_list[2])
         product_list[-1].tegs_prod(prod_inf_list[3])
-        print(prod_inf_list[3])
 
 
 
@@ -104,8 +109,8 @@ def admins(message):
     print(message.from_user.id)
     if 1439133134 == message.from_user.id:
         try:
-            messs = message.text.split()[1]
-            
+            messs = message.text.split("", 2)[1]
+            messs1 = message.text.split("", 2)[2]
         except:
             bot.send_message(message.chat.id, "После команды должен быть ID нового администратора.")
 
@@ -129,6 +134,43 @@ def add(message):
         else:
             remove_prod()
             up_list_prod()
+
+@bot.message_handler(commands=["question"])
+def q(message):
+    global question_list
+    try:
+        question_text = message.text.split(' ',maxsplit = 1)[1]
+        bot.send_message(message.chat.id,f"Вопрос отправлен, ожидайте ответа. Ваш вопрос находится под номером {len(question_list)+1} в очереди")
+        question_list.append([message.chat.id, question_text, message.from_user.username])
+        with open(f"{PATH}\questionlist.json", "w") as write_file:
+            json.dump(question_list, write_file,sort_keys=False,indent=4,ensure_ascii=False,)
+        for i in admin_list:
+            bot.send_message(i,f"У вас новый вопрос. Всего {len(question_list)} вопросов.")
+    except:
+        bot.send_message(message.chat.id,"Введите через пробел свой вопрос после команды. (/question текст)")
+
+@bot.message_handler(commands=["show_questions"])
+def show_question(message):
+    if question_list == []:
+        bot.send_message(message.chat.id, f'Вопросов нет.')
+    elif message.chat.id in admin_list:
+        j = 1
+        for i in question_list:
+            bot.send_message(message.chat.id, f'{j}) {i[1]} (от @{i[2]})')
+            j += 1
+
+@bot.message_handler(commands=["answer"])
+def answ(message):
+    global question_list
+    try:
+        id = message.text.split(' ', maxsplit = 2)[1]
+        text = message.text.split(' ', maxsplit = 2)[2]
+        bot.send_message(question_list[int(id)-1][0], f"Вы получили ответ на свой вопрос({question_list[int(id)-1][1]}):")
+        bot.send_message(question_list[int(id)-1][0], text)
+        del question_list[int(id)- 1]
+        bot.reply_to(message, 'Ответ отправлен')
+    except:
+        bot.reply_to(message, "Нельзя ответить на несуществующий вопрос.")
 
 @bot.message_handler(commands=["add"])
 def add(message):
@@ -181,9 +223,5 @@ def poto_use(message):
                 pass
 
 
-
-@bot.message_handler(commands=["question"])
-def question(message):
-    pass
 
 bot.infinity_polling()
