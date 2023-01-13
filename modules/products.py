@@ -1,26 +1,35 @@
-from modules.settings import *
-from modules.models import Product
+from modules.models import *
 
-def up_list_prod():
-    global product_list
-    product_list = []
-    for i in der_prod_js:
-        with open(f"{path_Prod}/{i}", "r") as read_file:
-            prod_inf_list = json.load(read_file)
-        product_list.append(Product(prod_inf_list[0]))
-        product_list[-1].add_photo(prod_inf_list[1])
-        product_list[-1].add_opis(prod_inf_list[2])
-        product_list[-1].tegs_prod(prod_inf_list[3])
+def add_product_sql(id): #Сохранение нового товара
+    add_product_sql = '''
+INSERT INTO products
+VALUES (?,?,?,?,?,?);
+'''
+    cursor.execute(add_product_sql, (product_list[id].id, product_list[id].name, product_list[id].tags, product_list[id].opis, product_list[id].path_photo, product_list[id].maney))
+    con.commit()
 
-def save_prod():
-    for i in range(len(product_list)):
-        if f'{product_list[i].name}.json' not in der_prod_js:
-            prod_dir = [product_list[i].name, product_list[i].Pash_photo, product_list[i].opis, product_list[i].tegs_list, product_list[i].money]
-            save_list = prod_dir[3].pop(0)
-            with open(f"{path_Prod}/{product_list[i].name}.json", "w") as write_file:
-                json.dump(save_list, write_file, indent = 4,ensure_ascii=False,)
+def get_product():
+    get_product = '''
+    SELECT id FROM products;'''
+    cursor.execute(get_product)
+    result = cursor.fetchall()
+    for i in result:
+        cursor.execute("SELECT name FROM products WHERE id = ?;", i)
+        name = cursor.fetchall()
+        cursor.execute("SELECT tags FROM products WHERE id = ?;", i)
+        tags = cursor.fetchall()
+        cursor.execute("SELECT opis FROM products WHERE id = ?;", i)
+        opis = cursor.fetchall()
+        cursor.execute("SELECT path_photo FROM products WHERE id = ?;", i)
+        path_photo = cursor.fetchall()
+        cursor.execute("SELECT maney FROM products WHERE id = ?;", i)
+        maney = cursor.fetchall() #надо сплитить переменную с тегами, это надо делать до добавления в продукт. И все эти сплиты надо добавить в список.
+        tags = tags[0].split("/")
+        product_list.append(Product(result[0], name[0],tags,opis[0],path_photo[0],maney[0]))
 
-def remove_prod():
-    os.remove()
+# Product()
 
-up_list_prod()
+# def remove_prod():
+#     os.remove()
+
+# up_list_prod()

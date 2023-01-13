@@ -1,8 +1,9 @@
-from modules.settings import *
 from modules.decorators import *
 
-# Clear main.py, move all not named func to another file and named him
-# Define field in all models, create some json file to save all users
+# Восстановить products.py, оптимизировать под SQLite (По желанию)
+# Восстановить admins.py и тоже оптимизировать/ Добавить удобное управление для администрации (Андрей)
+# Создание юзер интерфейса func.py(Макс)
+# Cохранение и выгрузка данных пользователей settings.py/ Cоздать логику под интерфейс пользователей и так же настроить правильную выгрузку товаров из SQLite func.py (Ваня)
 
 
 
