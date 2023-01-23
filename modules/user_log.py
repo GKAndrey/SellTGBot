@@ -1,4 +1,4 @@
-from modules.models import *
+from modules.products import *
 
 def us_log(message):
     global its_user
@@ -23,4 +23,4 @@ def strt():
     btn1 = types.KeyboardButton('/start')
     markup.add(btn1)
     for i in us_id:
-        bot.send_message(i[0], "Я снова работаю.")
+        bot.send_message(i[0], "Я снова работаю.", reply_markup = markup)

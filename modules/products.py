@@ -23,13 +23,6 @@ def get_product():
         cursor.execute("SELECT path_photo FROM products WHERE id = ?;", i)
         path_photo = cursor.fetchall()
         cursor.execute("SELECT maney FROM products WHERE id = ?;", i)
-        maney = cursor.fetchall() #надо сплитить переменную с тегами, это надо делать до добавления в продукт. И все эти сплиты надо добавить в список.
+        maney = cursor.fetchall()
         tags = tags[0].split("/")
         product_list.append(Product(result[0], name[0],tags,opis[0],path_photo[0],maney[0]))
-
-# Product()
-
-# def remove_prod():
-#     os.remove()
-
-# up_list_prod()

@@ -1,50 +1,29 @@
-from modules.products import *
+from modules.user_log import *
+from modules.func import *
 
-# def adm_pls(ID):
-#     admin_list.append(ID)
-#     with open("Admins.json", "w") as write_file:
-#         json.dump(admin_list, write_file)
+def adm_pls(ID):
+    add_admin = f'''
+UPDATE users
+SET admin = '1'
+WHERE id = '{ID}';
+'''
+    cursor.execute(add_admin)
+    con.commit()
 
-# def adm_mns(ID):
-#     try:
-#         admin_list.remove(ID)
-#         with open("Admins.json", "w") as write_file:
-#             json.dump(admin_list, write_file,sort_keys=False,indent=4,ensure_ascii=False,)
-#     except:
-#         pass
-
-# @bot.message_handler(commands=["adminp"])
-# def admins(message):
-#     print(message.from_user.id)
-#     if 1439133134 == message.from_user.id:
-#         try:
-#             messs = message.text.split("", 2)[1]
-#             messs1 = message.text.split("", 2)[2]
-#         except:
-#             bot.send_message(message.chat.id, "После команды должен быть ID нового администратора.")
-
-# @bot.message_handler(commands=["remove"])
-# def add(message):
-#     if message.from_user.id in admin_list:
-#         txt_mes = message.text.split()
-#         if len(txt_mes) > 1:
-#             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-#             for i in os.listdir(path_Im_Prod):
-#                 ind = i.replace(".png")
-#                 reamove_prod = types.KeyboardButton(f"/remove {ind}")
-#                 markup.add(reamove_prod)
-#             cansel = types.KeyboardButton("/cansel выход из меню админов")
-#             markup.add(cansel)
-#             bot.send_message(message.chat.id, 'Выберите вариант из ниже перечисленныхьили просто введите "/remove (Название обьявления)"', reply_markup=markup)
-#         # else:
-#         #     remove_prod()
-#         #     up_list_prod()
+def adm_mns(ID):
+    add_admin = f'''
+UPDATE users
+SET admin = NULL
+WHERE id = '{ID}';
+'''
+    cursor.execute(add_admin)
+    con.commit()
 
 def admin_menu(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
     add_prod = types.KeyboardButton("Добавить товар ➕")
     remove_prod = types.KeyboardButton("Удалить товар 🗑")
-    qst = types.KeyboardButton("Меню поддержки ")
+    qst = types.KeyboardButton("Вопросы пользователей ❓")
     cansel = types.KeyboardButton("Выход из меню админов 🛑")
     markup.add(add_prod, remove_prod, qst, cansel)
     msg = bot.send_message(message.chat.id, "Ого, важные люди. Какова цель вашего визита?", reply_markup=markup)
@@ -52,25 +31,40 @@ def admin_menu(message):
 
 def next_admin_click(message):
     if message.text == "Добавить товар ➕":
-        global adder
         msg = bot.send_message(message.chat.id, "Пришлите мне Название для обьявления.", reply_markup=types.ReplyKeyboardRemove())
         bot.register_next_step_handler(msg, add1)
+    elif message.text == "Удалить товар 🗑":
+        pass
+    elif message.text == "Вопросы пользователей ❓":
+        pass
+    elif message.text == "Выход из меню админов 🛑":
+        bot.send_message(message.chat.id, "Вы вышли из меню админов.")
+        murk(message)
 
 def add1(message):
-    product_list.append(Product(message.text))
-    msg = bot.send_message(message.chat.id, "Пришлите мне **Фото** для обьявления.")
-    bot.register_next_step_handler(msg, add2)
+    global prod_us_var
+    # product_list.append(Product(message.text))
+    if message.content_type == "text" and message.text != "":
+        prod_us_var = []
+        msg = bot.send_message(message.chat.id, "Пришлите мне **Фото** для обьявления (.png).", parse_mode = "Markdown")
+        prod_us_var.append(message.text)
+        bot.register_next_step_handler(msg, add2)
 
 def add2(message):
-    try:
+    if message.content_type == "photo":
         file = bot.get_file(message.photo[-1].file_id)
         file = bot.download_file(file.file_path)
-        with open(f'{path_Im_Prod}/{product_list[-1].name}.png', 'wb') as f:
+        with open(f'{path_Im_Prod}/{product_list[0]}.png', 'wb') as f:
             f.write(file)
         product_list[-1].add_photo()
-        bot.send_message(message.chat.id, 'Фото получено. Введите **Описание** обьявления/продукта.')
-        adder = 3
-    except:
+        msg = bot.send_message(message.chat.id, 'Фото получено. Введите **Описание** обьявления/продукта.')
+        bot.register_next_step_handler(msg, add3)
+    else:
+        msg = bot.send_message(message.chat.id, 'Отправте пожалуйста картинку формата .pdf')
+        bot.register_next_step_handler(msg, add2)
+
+def add3(message):
+    if message.content_type == "text" and message.text != "":
         pass
 
 @bot.message_handler(commands=["answer"])
