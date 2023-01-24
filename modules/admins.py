@@ -54,7 +54,7 @@ def add2(message):
     if message.content_type == "photo":
         file = bot.get_file(message.photo[-1].file_id)
         file = bot.download_file(file.file_path)
-        with open(f'{path_Im_Prod}/{product_list[0]}.png', 'wb') as f:
+        with open(f'{path_Im_Prod}/{product_list[]}.png', 'wb') as f:
             f.write(file)
         product_list[-1].add_photo()
         msg = bot.send_message(message.chat.id, 'Фото получено. Введите **Описание** обьявления/продукта.')
@@ -65,7 +65,8 @@ def add2(message):
 
 def add3(message):
     if message.content_type == "text" and message.text != "":
-        pass
+        product_list[-1].add_opis(message.text)
+        bot.send_message(message.chat.id, 'Пришлите мне **Теги** для обьявления. Пример: "#Спорт#Мода#Електроника".')
 
 @bot.message_handler(commands=["answer"])
 def answ(message):

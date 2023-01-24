@@ -13,6 +13,7 @@ cursor = con.cursor()
 
 admin_list = []
 question_list = []
+last_photo_indx = int
 
 def load_inf():
     cursor.execute("SELECT id FROM users WHERE admin = 1;")
@@ -37,6 +38,9 @@ def load_inf():
             us_name_qw = cursor.fetchall()
             question_list.append((i[0],us_name_qw[q][0],p[0]))
             q += 1
+    global last_photo_indx
+    a = cursor.execute("SELECT id FROM products;")
+    last_photo_indx = 1
 
 load_inf()
 adder = 0
