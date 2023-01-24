@@ -4,7 +4,7 @@
 from modules.func import *
 from modules.user_log import *
 
-strt() #Отсылает пользователям статус готовности, выключайте на время тестов.
+# strt() #Отсылает пользователям статус готовности, выключайте на время тестов.
 
 @bot.message_handler(commands=["start"])
 def start(message):
