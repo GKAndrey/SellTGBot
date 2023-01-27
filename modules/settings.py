@@ -1,8 +1,8 @@
 import telebot
 import os
 import sqlite3
-import random
-import re
+# import random
+# import re
 import sys
 from telebot import types
 
@@ -38,9 +38,15 @@ def load_inf():
             us_name_qw = cursor.fetchall()
             question_list.append((i[0],us_name_qw[q][0],p[0]))
             q += 1
+
     global last_photo_indx
     a = cursor.execute("SELECT id FROM products;")
-    last_photo_indx = 1
+    try:
+        last_photo_indx = a.fetchall()[-1][0]
+    except:
+        last_photo_indx = 1
+
+
 
 load_inf()
 adder = 0
@@ -48,3 +54,6 @@ its_user ={}
 product_list = []
 PATH = os.path.abspath(__file__ + "/.." + "/..")
 path_Im_Prod = os.path.join(PATH,"Photo")
+
+#Доп материал
+#← ↑ → ↓ △ ▽ ◁ ▷

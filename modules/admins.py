@@ -46,27 +46,30 @@ def add1(message):
     # product_list.append(Product(message.text))
     if message.content_type == "text" and message.text != "":
         prod_us_var = []
+        prod_us_var.append(last_photo_indx + 1)
         msg = bot.send_message(message.chat.id, "Пришлите мне **Фото** для обьявления (.png).", parse_mode = "Markdown")
         prod_us_var.append(message.text)
         bot.register_next_step_handler(msg, add2)
 
 def add2(message):
+    global prod_us_var
     if message.content_type == "photo":
         file = bot.get_file(message.photo[-1].file_id)
         file = bot.download_file(file.file_path)
-        with open(f'{path_Im_Prod}/{product_list[]}.png', 'wb') as f:
+        with open(f'{prod_us_var[0]}.png', 'wb') as f:
             f.write(file)
-        product_list[-1].add_photo()
-        msg = bot.send_message(message.chat.id, 'Фото получено. Введите **Описание** обьявления/продукта.')
+        msg = bot.send_message(message.chat.id, 'Фото получено. Введите **Описание** обьявления/продукта одним сообщением.',parse_mode = "Markdown")
         bot.register_next_step_handler(msg, add3)
     else:
         msg = bot.send_message(message.chat.id, 'Отправте пожалуйста картинку формата .pdf')
         bot.register_next_step_handler(msg, add2)
 
 def add3(message):
+    global prod_us_var
     if message.content_type == "text" and message.text != "":
-        product_list[-1].add_opis(message.text)
+        prod_us_var.append(message.text)
         bot.send_message(message.chat.id, 'Пришлите мне **Теги** для обьявления. Пример: "#Спорт#Мода#Електроника".')
+        
 
 @bot.message_handler(commands=["answer"])
 def answ(message):

@@ -4,7 +4,7 @@ from modules.decorators import *
 # Создание юзер интерфейса func.py(Макс)
 # Cохранение и выгрузка данных пользователей settings.py/ Cоздать логику под интерфейс пользователей и так же настроить правильную выгрузку товаров из SQLite func.py (Ваня)
 
-
+#Start не зависит не от чего
 
 if __name__ == '__main__':
     bot.infinity_polling()

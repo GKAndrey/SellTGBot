@@ -32,18 +32,11 @@ def check_answ(message):
         btn_search_ontag = types.KeyboardButton('По тегу 🏷️')
         btn_search_onname = types.KeyboardButton('По названию 🔤')
         markup.add(btn_search_onname,btn_search_ontag)
-        msg = bot.send_message(message.from_user.id, 'Поиск::', reply_markup=markup)
-        bot.register_next_step_handler(msg, start_bot)
+        msg = bot.send_message(message.from_user.id, 'Поиск:', reply_markup=markup)
+        bot.register_next_step_handler(msg, findfiles_on_search)
 
     elif message.text == 'Опции ⚙':
-        btn1 = types.KeyboardButton('Информация 📗')
-        btn2 = types.KeyboardButton('Помощь ❓')
-        btn3 = types.KeyboardButton('Оповещения 🔔')
-        cns = types.KeyboardButton('Выход ❌')
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        markup.add(btn1, btn2, btn3, cns)
-        msg = bot.send_message(message.chat.id,"Выберите действие из следующих вариантов:")
-        bot.register_next_step_handler(msg, optional)
+        opt(message)
 
     elif message.text == 'Админ панель 🎮':
         if its_user[message.from_user.id].admin == 1:
@@ -83,7 +76,13 @@ def optional(message):
     elif message.text == "Выход ❌":
         murk(message)
     elif message.text == "Оповещения 🔔":
-        
+        inlinemarkups = types.InlineKeyboardMarkup()
+        inlinemarkups.row_width = 2
+        btn1 = types.InlineKeyboardButton("Выключить  оповещения 🔕", callback_data="cb_off")
+        btn2 = types.InlineKeyboardButton("Включить оповещения 🔔", callback_data="cb_on")
+        close_menu = types.InlineKeyboardButton("Выйти в меню опций ⚙", callback_data="cb_close")
+        inlinemarkups.add(btn1, btn2, close_menu)
+        bot.send_message(message.chat.id, "Выключить оповещения?", reply_markup=inlinemarkups)
 
 
 
@@ -110,6 +109,18 @@ def quests(message):
         markup.add(btn1, btn2, btn4, cns)
     msg = bot.send_message(message.chat.id,f"Вопрос отправлен, ожидайте ответа. Ваш вопрос находится под номером {len(question_list)} в очереди", reply_markup=markup)
     bot.register_next_step_handler(msg, check_answ)
+
+
+
+def opt(message):
+    btn1 = types.KeyboardButton('Информация 📗')
+    btn2 = types.KeyboardButton('Помощь ❓')
+    btn3 = types.KeyboardButton('Оповещения 🔔')
+    cns = types.KeyboardButton('Выход ❌')
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add(btn1, btn2, btn3, cns)
+    msg = bot.send_message(message.chat.id,"Выберите действие из следующих вариантов:", reply_markup=markup)
+    bot.register_next_step_handler(msg, optional)
 
 
 
