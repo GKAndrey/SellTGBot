@@ -1,4 +1,5 @@
-from modules.products import *
+from modules.settings import *
+from modules.models import User
 
 def us_log(message):
     global its_user

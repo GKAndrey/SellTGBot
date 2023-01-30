@@ -1,4 +1,5 @@
 from modules.models import *
+from modules.func import *
 
 # def add_product_sql(id): #Сохранение нового товара
 #     add_product_sql = '''
@@ -28,9 +29,13 @@ from modules.models import *
 
 
 def findfiles_on_search(message):
-    msg = bot.send_message(message.chat.id,"Введите название товара",reply_markup=telebot.types.ReplyKeyboardRemove())
-    bot.register_next_step_handler(msg, find_on_search)
+    if message.text == 'По названию 🔤':
+        msg = bot.send_message(message.chat.id,"Введите название товара",reply_markup=types.ReplyKeyboardRemove())
+        bot.register_next_step_handler(msg, find_on_search)
     # bot.register_next_step_handler(msg, start_bot)
+    elif message.text == "Закрыть ❌":
+        bot.send_message(message.chat.id,"Возвращаемся обратно")
+        murk(message)
 
 def find_on_search(message):
     try:
@@ -55,10 +60,8 @@ def find_on_search(message):
         💵Цена: {money_prod}
         '''
         bot.send_message(message.chat.id,msg)
-        
+
         #имя, опписание , цена
     except:
         msg = bot.send_message(message.chat.id,"Такого товара не существует. Повторите попытку:",reply_markup=telebot.types.ReplyKeyboardRemove())
         bot.register_next_step_handler(msg, findfiles_on_search)
-
-

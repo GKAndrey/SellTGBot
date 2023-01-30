@@ -1,4 +1,5 @@
 from modules.admins import admin_menu
+from modules.products import findfiles_on_search
 from modules.user_log import *
 
 def murk(mess):
@@ -27,11 +28,12 @@ def start_bot(message):
 
 
 def check_answ(message):
-    if message.text == 'Товары 🛒': #Над логикой работает Ваня #дальше этого сообщения оно не заходит хз почему
+    if message.text == 'Товары 🛒':
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn_search_ontag = types.KeyboardButton('По тегу 🏷️')
         btn_search_onname = types.KeyboardButton('По названию 🔤')
-        markup.add(btn_search_onname,btn_search_ontag)
+        btn_close_products = types.KeyboardButton('Закрыть ❌')
+        markup.add(btn_search_onname,btn_search_ontag,btn_close_products)
         msg = bot.send_message(message.from_user.id, 'Поиск:', reply_markup=markup)
         bot.register_next_step_handler(msg, findfiles_on_search)
 
