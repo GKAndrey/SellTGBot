@@ -182,9 +182,9 @@ WHERE id = '{ID}';
 
 
 def admin_menu(message):
-    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-    add_prod = telebot.types.KeyboardButton("Добавить товар ➕")
-    remove_prod = telebot.types.KeyboardButton("Удалить товар 🗑")
+    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2) #🛠
+    add_prod = telebot.types.KeyboardButton("Работа над продукцией 🏷✏")
+    remove_prod = telebot.types.KeyboardButton("Админский состав 👮‍♂️") #🗑
     qst = telebot.types.KeyboardButton("Вопросы пользователей ❓")
     cansel = telebot.types.KeyboardButton("Выход из меню админов 🛑")
     markup.add(add_prod, remove_prod, qst, cansel)
@@ -194,11 +194,24 @@ def admin_menu(message):
 
 
 def next_admin_click(message):
-    if message.text == "Добавить товар ➕":
-        msg = bot.send_message(message.chat.id, "Пришлите мне Название для обьявления.", reply_markup=telebot.types.ReplyKeyboardRemove())
-        bot.register_next_step_handler(msg, add1)
-    elif message.text == "Удалить товар 🗑":
-        pass
+    if message.text == "Работа над продукцией 🏷✏":
+        markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+        btn1 = telebot.types.KeyboardButton("Просмотреть список товаров")
+        btn2 = telebot.types.KeyboardButton("Добавить продукт ➕")
+        btn3 = telebot.types.KeyboardButton("удалить продукт ✂")
+        btn4 = telebot.types.KeyboardButton("Выйти в меню админов 👮‍♂️")
+        markup.add(btn1, btn2, btn3, btn4)
+        # msg = bot.send_message(message.chat.id, "Пришлите мне Название для обьявления.", reply_markup=telebot.types.ReplyKeyboardRemove())
+        # bot.register_next_step_handler(msg, add1)
+    elif message.text == "Админский состав 👮‍♂️":
+        markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+        show_adm_list_btn = telebot.types.KeyboardButton("Просмотреть список админов 📄")
+        add_adm_btn = telebot.types.KeyboardButton("Добавить админа ➕")
+        del_adm_btn = telebot.types.KeyboardButton("Удалить админа ✂")
+        exit_on_menuadm_btn = telebot.types.KeyboardButton("Выйти в меню админов 👮‍♂️")
+        markup.add(show_adm_list_btn, add_adm_btn, del_adm_btn, exit_on_menuadm_btn)
+        msg = bot.send_message(message.chat.id, "Выберите нужное действие из католога:", reply_markup=markup)
+        bot.register_next_step_handler(msg, adm_chec)
     elif message.text == "Вопросы пользователей ❓":
         user_quest_work(message)
         msg = bot.send_message(message.chat.id, "Что дальше?")
@@ -211,6 +224,43 @@ def next_admin_click(message):
         murk(message)
 
 
+def adm_chec(message):
+    if message.text == "Просмотреть список админов 📄":
+        sqlreq = '''
+        SELECT user_name FROM admins WHERE admin = 1;'''
+        cursor.execute(sqlreq)
+        fetchall = cursor.fetchall()
+        msg = ''''''
+        num = 1
+        for i in fetchall:
+            msg += (f'''{num}) {i[0]}\n''')
+            bot.send_message(message.chat.id, msg)
+            num += 1
+        msg = bot.send_message(message.chat.id, "Выберите нужное действие из каталога:")
+        bot.register_next_step_handler(msg, adm_chec)
+    if message.text == "Добавить админа ➕":
+        pass
+    if message.text == "Удалить админа ✂":
+        msg = bot.send_message(message.chat.id, "Выберите нужное действие из каталога:")
+        bot.register_next_step_handler(msg, del_adm)
+    if message.text == "Выйти в меню админов 👮‍♂️":
+        pass
+
+
+
+def del_adm(message):
+    sqlreq = '''
+    SELECT user_name FROM admins WHERE admin = 1;
+    '''
+    cursor.execute(sqlreq)
+    fetchall = cursor.fetchall()
+    admin_name = fetchall[message.text - 1]
+    sqlreq2 = '''
+    SELECT id FROM admins WHERE user_name = ?;
+    '''
+    cursor.execute(sqlreq2, admin_name)
+    fetchall2 = cursor.fetchall()
+    adm_mns(fetchall2[0])
 
 def add1(message):
     global prod_us_var
