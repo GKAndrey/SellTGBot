@@ -1,4 +1,4 @@
-from modules.settings import *
+from modules.settings import cursor, con, bot, telebot, its_user
 from modules.models import User
 
 def us_log(message):
@@ -20,8 +20,8 @@ VALUES (?,?,?,?,?,?);
 def strt():
     us_id = cursor.execute("SELECT id FROM users WHERE sends = 1;")
     us_id = us_id.fetchall()
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton('/start')
+    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn1 = telebot.types.KeyboardButton('/start')
     markup.add(btn1)
     for i in us_id:
         bot.send_message(i[0], "Я снова работаю.", reply_markup = markup)

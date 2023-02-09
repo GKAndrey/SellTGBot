@@ -1,5 +1,3 @@
-from modules.settings import *
-
 class Product():
     def __init__(self, id:int, name:str, opis:str, path_photo:str, moneys:str, tegs:list):
         self.name = name

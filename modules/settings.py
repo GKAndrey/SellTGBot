@@ -4,7 +4,6 @@ import sqlite3
 # import random
 # import re
 import sys
-from telebot import types
 
 bot = telebot.TeleBot(token = '5950507768:AAG5OWXQtfIV2vVyskqOj0QBzIXS4zfEgeg')
 PATH = os.path.abspath(__file__ + "/.." + "/..")
@@ -54,6 +53,8 @@ its_user ={}
 product_list = []
 PATH = os.path.abspath(__file__ + "/.." + "/..")
 path_Im_Prod = os.path.join(PATH,"Photo")
+
+
 
 #Доп материал
 #← ↑ → ↓ △ ▽ ◁ ▷
